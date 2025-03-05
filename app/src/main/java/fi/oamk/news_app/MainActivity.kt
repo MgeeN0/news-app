@@ -15,7 +15,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fi.oamk.news_app.ui.appbars.BottomBar
-import fi.oamk.news_app.ui.appbars.TopBar
 import fi.oamk.news_app.ui.screens.Personalized
 import fi.oamk.news_app.ui.screens.TopNews
 import fi.oamk.news_app.ui.screens.Weather
@@ -38,9 +37,6 @@ fun BottomNavigationApp() {
     val navController = rememberNavController()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopBar()
-        },
         bottomBar = {
             BottomBar(navController)
         }

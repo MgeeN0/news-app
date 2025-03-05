@@ -13,10 +13,10 @@ data class Source(
 )
 
 data class Content (
-    var source: Array<Source>,
-    var author: String,
-    var title: String,
-    var description: String,
+    var source: Source,
+    var author: String?,
+    var title: String?,
+    var description: String?,
     var url: String,
     var urlToImage: String,
     var publishedAt: String,
@@ -32,8 +32,8 @@ data class Article (
 
 const val BASE_URL = "https://newsapi.org"
 interface ArticlesApi {
-    @GET("/v2/everything?apiKey=1ee3e762b1064d258d2d5faa8f2a0dc5")
-    suspend fun getArticles() : List<Article> //This function can be called only from getInstance() function outside of this interface,
+    @GET("/v2/top-headlines?country=us&apiKey=1ee3e762b1064d258d2d5faa8f2a0dc5")
+    suspend fun getArticles() : Article //This function can be called only from getInstance() function outside of this interface,
     //which contains Retrofit structure converting json response fields from GET request to an object
     companion object {
         var articlesService : ArticlesApi? = null
