@@ -1,5 +1,8 @@
 package fi.oamk.news_app.model
 
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
+import fi.oamk.news_app.viewmodel.CategoryViewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -30,11 +33,18 @@ data class Article (
     var completed: Boolean
 )
 
+@Composable
+fun getCategory(categoryViewModel:CategoryViewModel = viewModel()) : String {
+    return categoryViewModel.selectedCategory
+}
+
 const val BASE_URL = "https://newsapi.org"
 interface ArticlesApi {
+
     @GET("/v2/top-headlines?country=us&apiKey=1ee3e762b1064d258d2d5faa8f2a0dc5")
-    suspend fun getArticles() : Article //This function can be called only from getInstance() function outside of this interface,
+    suspend fun getArticles(@retrofit2.http.Query("category") category: String) : Article //This function can be called only from getInstance() function outside of this interface,
     //which contains Retrofit structure converting json response fields from GET request to an object
+    //retrofit2.http.Query allows to insert query data into request dynamically
     companion object {
         var articlesService : ArticlesApi? = null
 

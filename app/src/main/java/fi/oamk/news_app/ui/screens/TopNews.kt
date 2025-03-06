@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -30,13 +31,17 @@ import fi.oamk.news_app.model.Article
 import fi.oamk.news_app.model.Content
 import fi.oamk.news_app.ui.appbars.TopNewsBar
 import fi.oamk.news_app.viewmodel.ArticlesViewModel
+import fi.oamk.news_app.viewmodel.CategoryViewModel
 import fi.oamk.news_app.viewmodel.NewsUiState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopNews(modifier: Modifier,articlesViewModel: ArticlesViewModel = viewModel())
+fun TopNews(modifier: Modifier,articlesViewModel: ArticlesViewModel = viewModel(),categoryViewModel: CategoryViewModel = viewModel())
 {
+    val selectedCategory = categoryViewModel.selectedCategory
+    articlesViewModel.getArticlesList(selectedCategory)
+    Log.d("CATEGORY",selectedCategory)
     Scaffold (
         topBar = {
             TopNewsBar()
@@ -54,6 +59,11 @@ fun ArticlesScreen(modifier: Modifier,uiState: NewsUiState) {
         is NewsUiState.Success -> NewsCards(modifier,uiState.articles)
         is NewsUiState.Error -> ErrorScreen()
     }
+}
+
+@Composable
+fun getCategory(categoryViewModel: CategoryViewModel = viewModel()) : String {
+    return categoryViewModel.selectedCategory
 }
 
 @Composable
