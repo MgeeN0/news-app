@@ -12,7 +12,7 @@ data class Success(val todos: List<Article>)
 
 data class Source(
     var id: String?,
-    var name: String
+    var name: String?
 )
 
 data class Content (

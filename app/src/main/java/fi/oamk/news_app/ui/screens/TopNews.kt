@@ -1,6 +1,7 @@
 package fi.oamk.news_app.ui.screens
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -88,7 +90,11 @@ fun NewsCards(modifier: Modifier,response: Article) {
                 article.description = " "
             }
             if(article.title === null) {
-                Log.d("isNULL","title id is null")
+                Log.d("isNULL","title is null")
+                article.description = " "
+            }
+            if(article.source.name === null) {
+                Log.d("isNULL","source name is null")
                 article.description = " "
             }
             ArticleCard(article)
@@ -98,8 +104,10 @@ fun NewsCards(modifier: Modifier,response: Article) {
 
 @Composable
 fun ArticleCard(article:Content) {
+    val uriHandler = LocalUriHandler.current
     Card(
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp).fillMaxWidth(),
+        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+            .fillMaxWidth().clickable { uriHandler.openUri(article.url) },
         shape = RoundedCornerShape(CornerSize(10.dp)),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -116,6 +124,8 @@ fun ArticleCard(article:Content) {
                 )
             article.title?.let { Text(text = it, fontSize = 25.sp, color = Color.Black, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top=6.dp)) }
             article.description?.let { Text(text = it, fontSize = 15.sp, color = Color.DarkGray, modifier = Modifier.padding(top=5.dp, bottom=20.dp)) }
+            HorizontalDivider( modifier = Modifier.padding(end=280.dp),thickness = 2.dp)
+            article.source.name?.let { Text(text = it, fontSize = 12.sp, color = Color.DarkGray, modifier = Modifier.padding(top=3.dp, bottom=5.dp)) }
         }
 
     }
