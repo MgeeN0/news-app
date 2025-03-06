@@ -33,11 +33,6 @@ data class Article (
     var completed: Boolean
 )
 
-@Composable
-fun getCategory(categoryViewModel:CategoryViewModel = viewModel()) : String {
-    return categoryViewModel.selectedCategory
-}
-
 const val BASE_URL = "https://newsapi.org"
 interface ArticlesApi {
 

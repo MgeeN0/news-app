@@ -37,7 +37,6 @@ import fi.oamk.news_app.viewmodel.CategoryViewModel
 import fi.oamk.news_app.viewmodel.NewsUiState
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopNews(modifier: Modifier,articlesViewModel: ArticlesViewModel = viewModel(),categoryViewModel: CategoryViewModel = viewModel())
 {
@@ -61,11 +60,6 @@ fun ArticlesScreen(modifier: Modifier,uiState: NewsUiState) {
         is NewsUiState.Success -> NewsCards(modifier,uiState.articles)
         is NewsUiState.Error -> ErrorScreen()
     }
-}
-
-@Composable
-fun getCategory(categoryViewModel: CategoryViewModel = viewModel()) : String {
-    return categoryViewModel.selectedCategory
 }
 
 @Composable
