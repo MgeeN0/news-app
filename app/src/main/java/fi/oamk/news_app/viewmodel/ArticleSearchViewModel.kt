@@ -33,7 +33,8 @@ class ArticlesSearchViewModel: ViewModel()
             var articlesApi: SearchArticlesApi? = null
             try {
                 articlesApi = SearchArticlesApi.getInstance()
-                articleUiState = ArticleSearchUiState.Success(articlesApi.getArticles(searchPhrase,sortBy,language))
+                articleUiState = ArticleSearchUiState.Success(
+                    articlesApi.getArticles(searchPhrase,sortBy,language))
             } catch (e: Exception) {
                 Log.d("ERROR",e.message.toString())
                 articleUiState = ArticleSearchUiState.Error

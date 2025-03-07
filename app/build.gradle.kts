@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.retrofit)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation (libs.converter.gson)
     implementation (libs.coil.compose)
     testImplementation(libs.junit)

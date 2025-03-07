@@ -20,6 +20,7 @@ class SearchOptionsViewModel: ViewModel() {
     var languageExpanded by mutableStateOf(false)
     var sortTextFieldSize by mutableStateOf(Size.Zero)
     var languageTextFieldSize by mutableStateOf(Size.Zero)
+    var canSearch by mutableStateOf(false) //this lets user refresh articles once he changes sorting or language, if request was sent before
 
 
 

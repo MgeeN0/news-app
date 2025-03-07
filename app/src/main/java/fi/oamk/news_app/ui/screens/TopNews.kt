@@ -1,5 +1,6 @@
 package fi.oamk.news_app.ui.screens
 
+import android.graphics.Paint
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -35,6 +37,7 @@ import fi.oamk.news_app.ui.appbars.TopNewsBar
 import fi.oamk.news_app.viewmodel.ArticlesViewModel
 import fi.oamk.news_app.viewmodel.CategoryViewModel
 import fi.oamk.news_app.viewmodel.NewsUiState
+import kotlin.math.min
 
 
 @Composable
@@ -43,14 +46,9 @@ fun TopNews(modifier: Modifier,articlesViewModel: ArticlesViewModel = viewModel(
     val selectedCategory = categoryViewModel.selectedCategory
     articlesViewModel.getArticlesList(selectedCategory)
     Log.d("CATEGORY",selectedCategory)
-    Scaffold (
-        topBar = {
-            TopNewsBar()
-        }
-    )
-    { innerPadding ->
-        ArticlesScreen(Modifier.padding(innerPadding),articlesViewModel.articleUiState)
-    }
+    TopNewsBar()
+        ArticlesScreen(modifier,articlesViewModel.articleUiState)
+
 }
 
 @Composable
@@ -65,7 +63,7 @@ fun ArticlesScreen(modifier: Modifier,uiState: NewsUiState) {
 @Composable
 fun NewsCards(modifier: Modifier,response: Article) {
     LazyColumn (
-        modifier = Modifier.padding(top=120.dp)
+        modifier = modifier
     ){
         items(response.articles) { article ->
             /*
@@ -75,6 +73,7 @@ fun NewsCards(modifier: Modifier,response: Article) {
             )
             HorizontalDivider(color = Color.LightGray, thickness = 2.dp)
              */
+            Log.d("CARDS","cards display")
             if(article.source.id === null) {
                 Log.d("isNULL","source id is null")
                 article.source.id = "unknown"
@@ -120,6 +119,7 @@ fun ArticleCard(article:Content) {
             article.description?.let { Text(text = it, fontSize = 15.sp, color = Color.DarkGray, modifier = Modifier.padding(top=5.dp, bottom=20.dp)) }
             HorizontalDivider( modifier = Modifier.padding(end=280.dp),thickness = 2.dp)
             article.source.name?.let { Text(text = it, fontSize = 12.sp, color = Color.DarkGray, modifier = Modifier.padding(top=3.dp, bottom=5.dp)) }
+            article.publishedAt?.let { Text(text = it.substring(0, 10), fontSize = 10.sp, color = Color.LightGray, modifier = Modifier.padding(top=3.dp, bottom=5.dp).fillMaxWidth(), textAlign = TextAlign.Right) }
         }
 
     }
@@ -129,9 +129,13 @@ fun ArticleCard(article:Content) {
 
 @Composable
 fun LoadingScreen() {
-    Text("Loading...")
+    Text(
+        modifier = Modifier.padding(start = 8.dp,top = 130.dp),
+        text = "Loading...")
 }
 @Composable
 fun ErrorScreen() {
-    Text("Error retrieving data from API.")
+    Text(
+        modifier = Modifier.padding(start = 8.dp,top = 130.dp),
+        text = "Error retrieving data from API.")
 }

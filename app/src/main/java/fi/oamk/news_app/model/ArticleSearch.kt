@@ -1,27 +1,40 @@
 package fi.oamk.news_app.model
 
-import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
-import fi.oamk.news_app.viewmodel.CategoryViewModel
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import java.util.Objects
+import retrofit2.http.Query
 
 interface SearchArticlesApi {
     @GET("/v2/everything?apiKey=1ee3e762b1064d258d2d5faa8f2a0dc5")
-    suspend fun getArticles(@retrofit2.http.Query("q") search: String,
-                            @retrofit2.http.Query("language") language: String,
-                            @retrofit2.http.Query("sortBy") sortBy: String) : Article
+    suspend fun getArticles(
+        @Query("q") search: String,
+        @Query("language") language: String,
+        @Query("sortBy") sortBy: String
+    ): Article
+
     companion object {
-        var articlesService : SearchArticlesApi? = null
+        private var articlesService: SearchArticlesApi? = null
+        private const val BASE_URL = "https://newsapi.org"
 
         fun getInstance(): SearchArticlesApi {
-            if(articlesService === null){
+            if (articlesService == null) {
+                val loggingInterceptor = HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+
+                val client = OkHttpClient.Builder()
+                    .addInterceptor(loggingInterceptor)
+                    .build()
+
                 articlesService = Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .client(client) // Attach logging interceptor
                     .addConverterFactory(GsonConverterFactory.create())
-                    .build().create(SearchArticlesApi::class.java)
+                    .build()
+                    .create(SearchArticlesApi::class.java)
             }
             return articlesService!!
         }

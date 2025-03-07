@@ -42,7 +42,7 @@ import fi.oamk.news_app.viewmodel.NewsUiState
 import fi.oamk.news_app.viewmodel.SearchOptionsViewModel
 
 @Composable
-fun Personalized(modifier: Modifier,articlesViewModel: ArticlesSearchViewModel = viewModel(),searchOptionsViewModel: SearchOptionsViewModel = viewModel()) {
+fun Personalized(articlesViewModel: ArticlesSearchViewModel = viewModel(),searchOptionsViewModel: SearchOptionsViewModel = viewModel()) {
     //articlesViewModel.getArticlesList(searchOptionsViewModel.searchPhrase,searchOptionsViewModel.selectedSorting,searchOptionsViewModel.language)
     val sortItems = listOf("Relevancy", "Popularity", "Upload date")
     val languageItems = listOf(
@@ -58,14 +58,8 @@ fun Personalized(modifier: Modifier,articlesViewModel: ArticlesSearchViewModel =
         "Swedish",
         "Chinese"
     )
-    Scaffold(
-        topBar = {
-            SearchTopNewsBar()
-        }
-    )
-    { innerPadding ->
-        SearchArticlesScreen(Modifier.padding(innerPadding), articlesViewModel.articleUiState)
-    }
+    SearchTopNewsBar()
+        SearchArticlesScreen(articlesViewModel.articleUiState)
     Column(
         modifier = Modifier.padding(top = 120.dp, start = 8.dp, end = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -81,7 +75,11 @@ fun Personalized(modifier: Modifier,articlesViewModel: ArticlesSearchViewModel =
             )
             Button(
                 modifier = Modifier.padding(top = 12.dp, start = 12.dp),
-                onClick = { },
+                onClick = {
+                    articlesViewModel.getArticlesList(searchOptionsViewModel.searchPhrase,searchOptionsViewModel.language,searchOptionsViewModel.selectedSorting)
+                          searchOptionsViewModel.searchBar = "Searching phrase: " + searchOptionsViewModel.searchPhrase
+                          searchOptionsViewModel.canSearch = true
+                          },
                 content = { Text("Search") }
             )
         }
@@ -152,6 +150,9 @@ fun Personalized(modifier: Modifier,articlesViewModel: ArticlesSearchViewModel =
                             onClick = {
                                 searchOptionsViewModel.selectSorting(sort)
                                 searchOptionsViewModel.setFalse()
+                                if(searchOptionsViewModel.canSearch) {
+                                    articlesViewModel.getArticlesList(searchOptionsViewModel.searchPhrase,searchOptionsViewModel.language,searchOptionsViewModel.selectedSorting)
+                                }
                             }
                         )
                     }
@@ -211,6 +212,9 @@ fun Personalized(modifier: Modifier,articlesViewModel: ArticlesSearchViewModel =
                                 onClick = {
                                     searchOptionsViewModel.selectLanguage(lang)
                                     searchOptionsViewModel.setLFalse()
+                                    if(searchOptionsViewModel.canSearch) {
+                                        articlesViewModel.getArticlesList(searchOptionsViewModel.searchPhrase,searchOptionsViewModel.language,searchOptionsViewModel.selectedSorting)
+                                    }
                                 }
                             )
                         }
@@ -268,10 +272,11 @@ fun Personalized(modifier: Modifier,articlesViewModel: ArticlesSearchViewModel =
     }
 
 @Composable
-fun SearchArticlesScreen(modifier: Modifier,uiState: ArticleSearchUiState) {
+fun SearchArticlesScreen(uiState: ArticleSearchUiState) {
+    val modifier = Modifier.padding(top=265.dp)
     when (uiState) {
         is ArticleSearchUiState.NoRequest -> EmptyScreen()
-        is ArticleSearchUiState.Success -> SearchNewsCards(modifier,uiState.articles)
+        is ArticleSearchUiState.Success -> NewsCards(modifier,uiState.articles)
         is ArticleSearchUiState.Error -> SearchErrorScreen()
     }
 }
@@ -285,11 +290,8 @@ fun EmptyScreen() {
 }
 
 @Composable
-fun SearchNewsCards(modifier: Modifier,response: Article) {
-    Text("test")
-}
-
-@Composable
 fun SearchErrorScreen() {
-    Text("Error retrieving data from API.")
+    Text(
+        modifier = Modifier.padding(vertical = 265.dp, horizontal = 10.dp),
+        text = "Error retrieving data from API.")
 }
