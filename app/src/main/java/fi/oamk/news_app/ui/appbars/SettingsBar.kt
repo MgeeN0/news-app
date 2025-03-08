@@ -11,9 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import fi.oamk.news_app.R
 import fi.oamk.news_app.viewmodel.SearchOptionsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -21,7 +24,7 @@ import fi.oamk.news_app.viewmodel.SearchOptionsViewModel
 fun SettingsBar(navController: NavController, searchViewModel: SearchOptionsViewModel = viewModel()) {
     val backStackEntry = navController.currentBackStackEntryAsState()
     TopAppBar(
-        title = { Text("Settings") },
+        title = { Text(stringResource(R.string.settings_b)) },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.primary
@@ -30,7 +33,7 @@ fun SettingsBar(navController: NavController, searchViewModel: SearchOptionsView
             IconButton(onClick = { navController.navigateUp() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
+                    contentDescription = stringResource(R.string.back)
                 )
             }
         }

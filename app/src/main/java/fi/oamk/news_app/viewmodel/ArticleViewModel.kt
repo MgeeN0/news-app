@@ -35,7 +35,7 @@ class ArticlesViewModel: ViewModel()
                 articlesApi = ArticlesApi.getInstance()
                 articleUiState = NewsUiState.Success(articlesApi.getArticles(selectedCategory))
             } catch (e: Exception) {
-                Log.d("ERROR",e.message.toString())
+                //Log.d("ERROR",e.message.toString())
                 articleUiState = NewsUiState.Error
             }
         }

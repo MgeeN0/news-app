@@ -31,16 +31,6 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    /*
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    primary = darkGreen,
-    secondary = greyGreen,
-    tertiary = darkBlue
-
-     */
     primary = darkGreen,
     primaryContainer = lightGreen,
     onPrimary = Color.Black,
@@ -53,31 +43,7 @@ private val LightColorScheme = lightColorScheme(
     background = veryLightGreen,
     errorContainer = lightRed,
     onErrorContainer = darkRed
-
-
-
-            /*
-    primaryContainer = lightGreen,
-    secondaryContainer = lightGreyGreen,
-    tertiaryContainer = lightBlue
-
-             */
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
-
-@Composable
-fun isDarkMode(settingsViewModel: SettingsViewModel = viewModel()): Boolean {
-    return settingsViewModel.switched
-}
 
 @Composable
 fun NewsappTheme(
@@ -96,11 +62,6 @@ fun NewsappTheme(
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
-    }
-    var colorScheme1 = LightColorScheme
-    if(darkTheme)
-    {
-        colorScheme1 = DarkColorScheme
     }
 
     MaterialTheme(

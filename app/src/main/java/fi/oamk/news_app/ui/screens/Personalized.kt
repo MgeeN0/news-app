@@ -29,12 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import fi.oamk.news_app.R
 import fi.oamk.news_app.model.Article
 import fi.oamk.news_app.ui.appbars.SearchTopNewsBar
 import fi.oamk.news_app.ui.appbars.TopNewsBar
@@ -46,20 +48,21 @@ import fi.oamk.news_app.viewmodel.SearchOptionsViewModel
 
 @Composable
 fun Personalized(navController: NavController, articlesViewModel: ArticlesSearchViewModel = viewModel(), searchOptionsViewModel: SearchOptionsViewModel = viewModel()) {
-    //articlesViewModel.getArticlesList(searchOptionsViewModel.searchPhrase,searchOptionsViewModel.selectedSorting,searchOptionsViewModel.language)
-    val sortItems = listOf("Relevancy", "Popularity", "Upload date")
+    val sortItems = listOf(stringResource(R.string.relevancy),
+        stringResource(R.string.popularity), stringResource(R.string.upload_date)
+    )
     val languageItems = listOf(
-        "German",
-        "English",
-        "Spanish",
-        "French",
-        "Italian",
-        "Dutch",
-        "Norwegian",
-        "Portuguese",
-        "Russian",
-        "Swedish",
-        "Chinese"
+        stringResource(R.string.german),
+        stringResource(R.string.english),
+        stringResource(R.string.spanish),
+        stringResource(R.string.french),
+        stringResource(R.string.italian),
+        stringResource(R.string.dutch),
+        stringResource(R.string.norwegian),
+        stringResource(R.string.portuguese),
+        stringResource(R.string.russian),
+        stringResource(R.string.swedish),
+        stringResource(R.string.chinese)
     )
     SearchTopNewsBar(navController)
         SearchArticlesScreen(articlesViewModel.articleUiState)
@@ -72,7 +75,7 @@ fun Personalized(navController: NavController, articlesViewModel: ArticlesSearch
                 modifier = Modifier,
                 value = searchOptionsViewModel.searchPhrase,
                 onValueChange = { searchOptionsViewModel.searchPhrase = it },
-                label = { Text(text = "Enter search phrase") },
+                label = { Text(text = stringResource(R.string.enter_search_phrase)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
@@ -96,7 +99,7 @@ fun Personalized(navController: NavController, articlesViewModel: ArticlesSearch
                         searchOptionsViewModel.canSearch = true
                     }
                           },
-                content = { Text("Search") }
+                content = { Text(stringResource(R.string.search)) }
             )
         }
         Row(
@@ -109,57 +112,31 @@ fun Personalized(navController: NavController, articlesViewModel: ArticlesSearch
                     readOnly = true,
                     value = searchOptionsViewModel.getText(searchOptionsViewModel.selectedSorting),
                     onValueChange = { searchOptionsViewModel.selectedSorting = it },
-                    modifier = Modifier.width(160.dp)
+                    modifier = Modifier
+                        .width(160.dp)
                         .height(60.dp)
                         .onGloballyPositioned { coordinates ->
                             searchOptionsViewModel.sortTextFieldSize = coordinates.size.toSize()
-                },
-                    label = { Text("Sort by") },
+                        },
+                    label = { Text(stringResource(R.string.sort_by)) },
                     trailingIcon = {
                         Icon(searchOptionsViewModel.getIcon(searchOptionsViewModel.expanded),
-                            "Sort",
+                            stringResource(R.string.sort),
                             Modifier.clickable { searchOptionsViewModel.setExpanded() })
                     }
                 )
-                /*
-                Surface(
-                    modifier = Modifier
-                        .clickable { searchOptionsViewModel.setExpanded() },
-                    shape = CircleShape,
-                    color = Color.Magenta,
-                    shadowElevation = 8.dp
-                ) {
-                    Text("Sort by", modifier = Modifier.padding(10.dp))
-                }
-                 */
                 DropdownMenu(
                     expanded = searchOptionsViewModel.expanded,
                     onDismissRequest = { searchOptionsViewModel.setFalse() },
                     modifier = Modifier.width(with(LocalDensity.current){searchOptionsViewModel.sortTextFieldSize.width.toDp()})
 
                 ) {
-                    /*
-                    DropdownMenuItem(
-                        text = { Text("Relevancy") },
-                        onClick = { searchOptionsViewModel.selectSorting("relevancy") }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Popularity") },
-                        onClick = { searchOptionsViewModel.selectSorting("popularity") }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Upload date") },
-                        onClick = { searchOptionsViewModel.selectSorting("publishedAt") }
-                    )
-
-                     */
-
                     sortItems.forEach { item ->
                         val sort: String = when (item) {
-                            "Relevancy" -> "relevancy"
-                            "Popularity" -> "popularity"
-                            "Upload date" -> "publishedAt"
-                            else -> "relevancy"
+                            stringResource(R.string.relevancy) -> stringResource(R.string.sRelevancy)
+                            stringResource(R.string.popularity) -> stringResource(R.string.sPopularity)
+                            stringResource(R.string.upload_date)  -> stringResource(R.string.sPublishedAt)
+                            else -> stringResource(R.string.sRelevancy)
                         }
                         DropdownMenuItem(
                             text = { Text(item) },
@@ -177,29 +154,21 @@ fun Personalized(navController: NavController, articlesViewModel: ArticlesSearch
                 Column(
                     modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)
                 ) {
-                    /*
-                Surface(
-                    modifier = Modifier.padding(start=8.dp,top = 8.dp)
-                        .clickable { searchOptionsViewModel.setLExpanded() },
-                    shape = CircleShape,
-                    color = Color.Magenta,
-                    shadowElevation = 8.dp
-                ) {
-                    Text("Language", modifier = Modifier.padding(10.dp))
-                }
-                 */
                     OutlinedTextField(
-                        modifier = Modifier.width(160.dp)
+                        modifier = Modifier
+                            .width(160.dp)
                             .height(60.dp)
                             .onGloballyPositioned { coordinates ->
-                                searchOptionsViewModel.languageTextFieldSize = coordinates.size.toSize() },
+                                searchOptionsViewModel.languageTextFieldSize =
+                                    coordinates.size.toSize()
+                            },
                         readOnly = true,
                         value = searchOptionsViewModel.getText(searchOptionsViewModel.language),
                         onValueChange = { searchOptionsViewModel.language = it },
-                        label = { Text("Language") },
+                        label = { Text(stringResource(R.string.labelLanguage)) },
                         trailingIcon = {
                             Icon(searchOptionsViewModel.getIcon(searchOptionsViewModel.languageExpanded),
-                                "language",
+                                stringResource(R.string.language),
                                 Modifier.clickable { searchOptionsViewModel.setLExpanded() })
                         }
                     )
@@ -210,18 +179,18 @@ fun Personalized(navController: NavController, articlesViewModel: ArticlesSearch
                     ) {
                         languageItems.forEach { item ->
                             val lang: String = when (item) {
-                                "German" -> "de"
-                                "English" -> "en"
-                                "Spanish" -> "es"
-                                "French" -> "fr"
-                                "Italian" -> "it"
-                                "Dutch" -> "nl"
-                                "Norwegian" -> "no"
-                                "Portuguese" -> "pt"
-                                "Russian" -> "ru"
-                                "Swedish" -> "sv"
-                                "Chinese" -> "zh"
-                                else -> "en"
+                                stringResource(R.string.german) -> stringResource(R.string.de)
+                                stringResource(R.string.english) -> stringResource(R.string.en)
+                                stringResource(R.string.spanish) -> stringResource(R.string.es)
+                                stringResource(R.string.french) -> stringResource(R.string.fr)
+                                stringResource(R.string.italian) -> stringResource(R.string.it)
+                                stringResource(R.string.dutch) -> stringResource(R.string.nl)
+                                stringResource(R.string.norwegian) -> stringResource(R.string.no)
+                                stringResource(R.string.portuguese) -> stringResource(R.string.pt)
+                                stringResource(R.string.russian) -> stringResource(R.string.ru)
+                                stringResource(R.string.swedish) -> stringResource(R.string.sv)
+                                stringResource(R.string.chinese) -> stringResource(R.string.zh)
+                                else -> stringResource(R.string.en)
                             }
                             DropdownMenuItem(
                                 text = { Text(item) },
@@ -234,53 +203,6 @@ fun Personalized(navController: NavController, articlesViewModel: ArticlesSearch
                                 }
                             )
                         }
-                        /*
-                        DropdownMenuItem(
-                            text = { Text("German") },
-                            onClick = { searchOptionsViewModel.selectLanguage("de") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("English") },
-                            onClick = { searchOptionsViewModel.selectLanguage("en") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Spanish") },
-                            onClick = { searchOptionsViewModel.selectLanguage("es") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("French") },
-                            onClick = { searchOptionsViewModel.selectLanguage("fr") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Italian") },
-                            onClick = { searchOptionsViewModel.selectLanguage("fr") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Dutch") },
-                            onClick = { searchOptionsViewModel.selectLanguage("nl") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Norwegian") },
-                            onClick = { searchOptionsViewModel.selectLanguage("no") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Portuguese") },
-                            onClick = { searchOptionsViewModel.selectLanguage("pt") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Russian") },
-                            onClick = { searchOptionsViewModel.selectLanguage("ru") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Swedish") },
-                            onClick = { searchOptionsViewModel.selectLanguage("sv") }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Chinese") },
-                            onClick = { searchOptionsViewModel.selectLanguage("zh") }
-                        )
-
-                         */
                     }
                 }
             }
@@ -301,6 +223,6 @@ fun SearchArticlesScreen(uiState: ArticleSearchUiState) {
 fun EmptyScreen() {
     Text(
         modifier = Modifier.padding(vertical = 265.dp, horizontal = 10.dp),
-        text = "articles will appear here..."
+        text = stringResource(R.string.articles)
     )
 }

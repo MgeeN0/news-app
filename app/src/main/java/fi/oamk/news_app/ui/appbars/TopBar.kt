@@ -17,7 +17,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -27,8 +29,9 @@ import fi.oamk.news_app.viewmodel.CategoryViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopNewsBar(navController: NavController, categoryViewModel: CategoryViewModel = viewModel()) {
+    val context = LocalContext.current
     TopAppBar(
-        title = { Text("Top News: " + categoryViewModel.selectedCategory) },
+        title = { Text(stringResource(R.string.top_news, categoryViewModel.selectedCategory)) },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -37,7 +40,7 @@ fun TopNewsBar(navController: NavController, categoryViewModel: CategoryViewMode
             IconButton(onClick = { categoryViewModel.changeExpanded() }) {
                 Icon(
                     painter = painterResource(R.drawable.category),
-                    contentDescription = "Open menu"
+                    contentDescription = stringResource(R.string.open_menu)
                 )
             }
             DropdownMenu(
@@ -45,38 +48,38 @@ fun TopNewsBar(navController: NavController, categoryViewModel: CategoryViewMode
                 onDismissRequest = { categoryViewModel.setFalse() }
             ) {
                 DropdownMenuItem(
-                    text = { Text("Business") },
-                    onClick = { categoryViewModel.selectCategory("business") }
+                    text = { Text(stringResource(R.string.business)) },
+                    onClick = { categoryViewModel.selectCategory(context.getString(R.string.sBusiness)) }
                 )
                 DropdownMenuItem(
-                    text = { Text("Entertainment") },
-                    onClick = { categoryViewModel.selectCategory("entertainment")}
+                    text = { Text(stringResource(R.string.entertainment)) },
+                    onClick = { categoryViewModel.selectCategory(context.getString(R.string.sEntertainment))}
                 )
                 DropdownMenuItem(
-                    text = { Text("General") },
-                    onClick = { categoryViewModel.selectCategory("general")}
+                    text = { Text(stringResource(R.string.general)) },
+                    onClick = { categoryViewModel.selectCategory(context.getString(R.string.sGeneral))}
                 )
                 DropdownMenuItem(
-                    text = { Text("Health") },
-                    onClick = { categoryViewModel.selectCategory("health")}
+                    text = { Text(stringResource(R.string.health)) },
+                    onClick = { categoryViewModel.selectCategory(context.getString(R.string.sHealth))}
                 )
                 DropdownMenuItem(
-                    text = { Text("Science") },
-                    onClick = { categoryViewModel.selectCategory("science")}
+                    text = { Text(stringResource(R.string.science)) },
+                    onClick = { categoryViewModel.selectCategory(context.getString(R.string.sScience))}
                 )
                 DropdownMenuItem(
-                    text = { Text("Sports") },
-                    onClick = { categoryViewModel.selectCategory("sports")}
+                    text = { Text(stringResource(R.string.sports)) },
+                    onClick = { categoryViewModel.selectCategory(context.getString(R.string.sSports))}
                 )
                 DropdownMenuItem(
-                    text = { Text("Technology") },
-                    onClick = { categoryViewModel.selectCategory("technology")}
+                    text = { Text(stringResource(R.string.technology)) },
+                    onClick = { categoryViewModel.selectCategory(context.getString(R.string.sTechnology))}
                 )
             }
-            IconButton(onClick = { navController.navigate("settings") }) {
+            IconButton(onClick = { navController.navigate(context.getString(R.string.settings)) }) {
                 Icon(
                     imageVector = Icons.Filled.Settings,
-                    contentDescription = "Open submenu"
+                    contentDescription = stringResource(R.string.open_submenu)
                 )
             }
         },

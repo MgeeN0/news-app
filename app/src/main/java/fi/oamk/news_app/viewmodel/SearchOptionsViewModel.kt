@@ -42,12 +42,12 @@ class SearchOptionsViewModel: ViewModel() {
 
     fun selectSorting(sort: String) {
         selectedSorting = sort
-        Log.d("SORTING",selectedSorting)
+        //Log.d("SORTING",selectedSorting)
     }
 
     fun selectLanguage(language_: String) {
         language = language_
-        Log.d("LANGUAGE",language)
+        //Log.d("LANGUAGE",language)
     }
 
     fun getIcon(expanded: Boolean): ImageVector {

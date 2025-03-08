@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -52,16 +53,14 @@ fun TopNews(navController: NavController,modifier: Modifier, articlesViewModel: 
         articlesViewModel.getArticlesList(selectedCategory)
         categoryViewModel.hasSentRequest = true
     }
-    Log.d("CATEGORY",selectedCategory)
     TopNewsBar(navController)
         ArticlesScreen(modifier,articlesViewModel.articleUiState)
-    Log.d("Top News","hello")
 
 }
 
 @Composable
 fun ArticlesScreen(modifier: Modifier,uiState: NewsUiState) {
-    Log.d("Articles Screen","hello")
+    //Log.d("Articles Screen","hello")
     when (uiState) {
         is NewsUiState.Loading -> LoadingScreen()
         is NewsUiState.Success -> NewsCards(modifier,uiState.articles)
@@ -75,28 +74,21 @@ fun NewsCards(modifier: Modifier,response: Article) {
         modifier = modifier
     ){
         items(response.articles) { article ->
-            /*
-            Text(
-                text = article.title,
-                modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
-            )
-            HorizontalDivider(color = Color.LightGray, thickness = 2.dp)
-             */
-            Log.d("CARDS","cards display")
+            //Log.d("CARDS","cards display")
             if(article.source.id === null) {
-                Log.d("isNULL","source id is null")
-                article.source.id = "unknown"
+                //Log.d("isNULL","source id is null")
+                article.source.id = stringResource(R.string.unknown)
             }
             if(article.description === null) {
-                Log.d("isNULL","desc is null")
+                //Log.d("isNULL","desc is null")
                 article.description = " "
             }
             if(article.title === null) {
-                Log.d("isNULL","title is null")
+                //Log.d("isNULL","title is null")
                 article.description = " "
             }
             if(article.source.name === null) {
-                Log.d("isNULL","source name is null")
+                //Log.d("isNULL","source name is null")
                 article.description = " "
             }
             ArticleCard(article)
@@ -108,8 +100,10 @@ fun NewsCards(modifier: Modifier,response: Article) {
 fun ArticleCard(article:Content) {
     val uriHandler = LocalUriHandler.current
     Card(
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
-            .fillMaxWidth().clickable { uriHandler.openUri(article.url) },
+        modifier = Modifier
+            .padding(horizontal = 10.dp, vertical = 5.dp)
+            .fillMaxWidth()
+            .clickable { uriHandler.openUri(article.url) },
         shape = RoundedCornerShape(CornerSize(10.dp)),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
         colors = CardColors(
@@ -135,20 +129,23 @@ fun ArticleCard(article:Content) {
             HorizontalDivider( modifier = Modifier.padding(end=280.dp),thickness = 2.dp, color = MaterialTheme.colorScheme.primary)
             Row {
                 article.source.name?.let { Text(text = it, fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.padding(top=3.dp, bottom=5.dp)) }
-                article.publishedAt?.let { Text(text = it.substring(0, 10), fontSize = 10.sp, color = MaterialTheme.colorScheme.tertiary, modifier = Modifier.padding(top=3.dp, bottom=5.dp).fillMaxWidth(), textAlign = TextAlign.Right) }
+                article.publishedAt?.let { Text(text = it.substring(0, 10), fontSize = 10.sp, color = MaterialTheme.colorScheme.tertiary, modifier = Modifier
+                    .padding(top = 3.dp, bottom = 5.dp)
+                    .fillMaxWidth(), textAlign = TextAlign.Right) }
             }
         }
 
     }
 
-    article.source.id?.let { Log.d("SOURCE ID", it) }
+    //article.source.id?.let { Log.d("SOURCE ID", it) }
 }
 
 @Composable
 fun LoadingScreen() {
     Text(
         modifier = Modifier.padding(start = 8.dp,top = 130.dp),
-        text = "Loading...")
+        text = stringResource(R.string.loading)
+    )
 }
 @Composable
 fun ErrorScreen(modifier:Modifier) {
@@ -166,6 +163,7 @@ fun ErrorScreen(modifier:Modifier) {
     ) {
         Text(
             modifier = Modifier.padding(12.dp),
-            text = "Error retrieving data from API.")
+            text = stringResource(R.string.error_retrieving_data_from_api)
+        )
     }
 }

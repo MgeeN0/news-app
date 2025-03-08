@@ -36,7 +36,7 @@ class ArticlesSearchViewModel: ViewModel()
                 articleUiState = ArticleSearchUiState.Success(
                     articlesApi.getArticles(searchPhrase,sortBy,language))
             } catch (e: Exception) {
-                Log.d("ERROR",e.message.toString())
+                //Log.d("ERROR",e.message.toString())
                 articleUiState = ArticleSearchUiState.Error
             }
         }
