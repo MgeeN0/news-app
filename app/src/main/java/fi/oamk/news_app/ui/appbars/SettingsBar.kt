@@ -1,6 +1,7 @@
 package fi.oamk.news_app.ui.appbars
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -13,25 +14,23 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import fi.oamk.news_app.viewmodel.ArticlesSearchViewModel
-import fi.oamk.news_app.viewmodel.CategoryViewModel
 import fi.oamk.news_app.viewmodel.SearchOptionsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchTopNewsBar(navController: NavController,searchViewModel: SearchOptionsViewModel = viewModel()) {
+fun SettingsBar(navController: NavController, searchViewModel: SearchOptionsViewModel = viewModel()) {
     val backStackEntry = navController.currentBackStackEntryAsState()
     TopAppBar(
-        title = { Text(searchViewModel.searchBar) },
+        title = { Text("Settings") },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.primary
         ),
-        actions = {
-            IconButton(onClick = { navController.navigate("settings") }) {
+        navigationIcon = {
+            IconButton(onClick = { navController.navigateUp() }) {
                 Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "Open submenu"
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back"
                 )
             }
         }

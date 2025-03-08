@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import fi.oamk.news_app.R
 import fi.oamk.news_app.model.Article
@@ -44,7 +45,7 @@ import kotlin.math.min
 
 
 @Composable
-fun TopNews(modifier: Modifier,articlesViewModel: ArticlesViewModel = viewModel(),categoryViewModel: CategoryViewModel = viewModel())
+fun TopNews(navController: NavController,modifier: Modifier, articlesViewModel: ArticlesViewModel = viewModel(), categoryViewModel: CategoryViewModel = viewModel())
 {
     val selectedCategory = categoryViewModel.selectedCategory
     if(!categoryViewModel.hasSentRequest) {
@@ -52,7 +53,7 @@ fun TopNews(modifier: Modifier,articlesViewModel: ArticlesViewModel = viewModel(
         categoryViewModel.hasSentRequest = true
     }
     Log.d("CATEGORY",selectedCategory)
-    TopNewsBar()
+    TopNewsBar(navController)
         ArticlesScreen(modifier,articlesViewModel.articleUiState)
     Log.d("Top News","hello")
 
@@ -64,7 +65,7 @@ fun ArticlesScreen(modifier: Modifier,uiState: NewsUiState) {
     when (uiState) {
         is NewsUiState.Loading -> LoadingScreen()
         is NewsUiState.Success -> NewsCards(modifier,uiState.articles)
-        is NewsUiState.Error -> ErrorScreen()
+        is NewsUiState.Error -> ErrorScreen(Modifier.padding(start = 80.dp, top = 130.dp))
     }
 }
 
@@ -129,11 +130,11 @@ fun ArticleCard(article:Content) {
                     error = painterResource(R.drawable.image_icon),
                     contentDescription = "Image"
                 )
-            article.title?.let { Text(text = it,style = MaterialTheme.typography.titleLarge, color = Color.Black, modifier = Modifier.padding(top=6.dp)) }
-            article.description?.let { Text(text = it,style = MaterialTheme.typography.bodyLarge, color = Color.DarkGray, modifier = Modifier.padding(top=5.dp, bottom=20.dp)) }
+            article.title?.let { Text(text = it,style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.padding(top=6.dp)) }
+            article.description?.let { Text(text = it,style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSecondary, modifier = Modifier.padding(top=5.dp, bottom=20.dp)) }
             HorizontalDivider( modifier = Modifier.padding(end=280.dp),thickness = 2.dp, color = MaterialTheme.colorScheme.primary)
             Row {
-                article.source.name?.let { Text(text = it, fontSize = 12.sp, color = Color.DarkGray, modifier = Modifier.padding(top=3.dp, bottom=5.dp)) }
+                article.source.name?.let { Text(text = it, fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.padding(top=3.dp, bottom=5.dp)) }
                 article.publishedAt?.let { Text(text = it.substring(0, 10), fontSize = 10.sp, color = MaterialTheme.colorScheme.tertiary, modifier = Modifier.padding(top=3.dp, bottom=5.dp).fillMaxWidth(), textAlign = TextAlign.Right) }
             }
         }
@@ -150,8 +151,21 @@ fun LoadingScreen() {
         text = "Loading...")
 }
 @Composable
-fun ErrorScreen() {
-    Text(
-        modifier = Modifier.padding(start = 8.dp,top = 130.dp),
-        text = "Error retrieving data from API.")
+fun ErrorScreen(modifier:Modifier) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(CornerSize(10.dp)),
+        colors = CardColors(
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            disabledContentColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        ),
+    ) {
+        Text(
+            modifier = Modifier.padding(12.dp),
+            text = "Error retrieving data from API.")
+    }
 }

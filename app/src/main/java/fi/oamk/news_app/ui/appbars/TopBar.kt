@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,17 +20,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import fi.oamk.news_app.R
 import fi.oamk.news_app.viewmodel.CategoryViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopNewsBar(categoryViewModel: CategoryViewModel = viewModel()) {
+fun TopNewsBar(navController: NavController, categoryViewModel: CategoryViewModel = viewModel()) {
     TopAppBar(
         title = { Text("Top News: " + categoryViewModel.selectedCategory) },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary
+            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ),
         actions = {
             IconButton(onClick = { categoryViewModel.changeExpanded() }) {
@@ -69,6 +71,12 @@ fun TopNewsBar(categoryViewModel: CategoryViewModel = viewModel()) {
                 DropdownMenuItem(
                     text = { Text("Technology") },
                     onClick = { categoryViewModel.selectCategory("technology")}
+                )
+            }
+            IconButton(onClick = { navController.navigate("settings") }) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = "Open submenu"
                 )
             }
         },

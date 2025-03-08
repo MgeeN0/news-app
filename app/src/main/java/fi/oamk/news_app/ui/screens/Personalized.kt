@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -32,6 +33,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import fi.oamk.news_app.model.Article
 import fi.oamk.news_app.ui.appbars.SearchTopNewsBar
 import fi.oamk.news_app.ui.appbars.TopNewsBar
@@ -42,7 +45,7 @@ import fi.oamk.news_app.viewmodel.NewsUiState
 import fi.oamk.news_app.viewmodel.SearchOptionsViewModel
 
 @Composable
-fun Personalized(articlesViewModel: ArticlesSearchViewModel = viewModel(),searchOptionsViewModel: SearchOptionsViewModel = viewModel()) {
+fun Personalized(navController: NavController, articlesViewModel: ArticlesSearchViewModel = viewModel(), searchOptionsViewModel: SearchOptionsViewModel = viewModel()) {
     //articlesViewModel.getArticlesList(searchOptionsViewModel.searchPhrase,searchOptionsViewModel.selectedSorting,searchOptionsViewModel.language)
     val sortItems = listOf("Relevancy", "Popularity", "Upload date")
     val languageItems = listOf(
@@ -58,7 +61,7 @@ fun Personalized(articlesViewModel: ArticlesSearchViewModel = viewModel(),search
         "Swedish",
         "Chinese"
     )
-    SearchTopNewsBar()
+    SearchTopNewsBar(navController)
         SearchArticlesScreen(articlesViewModel.articleUiState)
     Column(
         modifier = Modifier.padding(top = 120.dp, start = 8.dp, end = 8.dp),
@@ -74,11 +77,24 @@ fun Personalized(articlesViewModel: ArticlesSearchViewModel = viewModel(),search
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
             Button(
+                colors = ButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.secondaryContainer,
+                    disabledContentColor = MaterialTheme.colorScheme.tertiary,
+                    disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer
+                ),
                 modifier = Modifier.padding(top = 12.dp, start = 12.dp),
                 onClick = {
-                    articlesViewModel.getArticlesList(searchOptionsViewModel.searchPhrase,searchOptionsViewModel.language,searchOptionsViewModel.selectedSorting)
-                          searchOptionsViewModel.searchBar = "Searching phrase: " + searchOptionsViewModel.searchPhrase
-                          searchOptionsViewModel.canSearch = true
+                    if(searchOptionsViewModel.searchPhrase != "") {
+                        articlesViewModel.getArticlesList(
+                            searchOptionsViewModel.searchPhrase,
+                            searchOptionsViewModel.language,
+                            searchOptionsViewModel.selectedSorting
+                        )
+                        searchOptionsViewModel.searchBar =
+                            "Searching phrase: " + searchOptionsViewModel.searchPhrase
+                        searchOptionsViewModel.canSearch = true
+                    }
                           },
                 content = { Text("Search") }
             )
@@ -277,7 +293,7 @@ fun SearchArticlesScreen(uiState: ArticleSearchUiState) {
     when (uiState) {
         is ArticleSearchUiState.NoRequest -> EmptyScreen()
         is ArticleSearchUiState.Success -> NewsCards(modifier,uiState.articles)
-        is ArticleSearchUiState.Error -> SearchErrorScreen()
+        is ArticleSearchUiState.Error -> ErrorScreen(Modifier.padding(start = 80.dp, top = 265.dp))
     }
 }
 
@@ -287,11 +303,4 @@ fun EmptyScreen() {
         modifier = Modifier.padding(vertical = 265.dp, horizontal = 10.dp),
         text = "articles will appear here..."
     )
-}
-
-@Composable
-fun SearchErrorScreen() {
-    Text(
-        modifier = Modifier.padding(vertical = 265.dp, horizontal = 10.dp),
-        text = "Error retrieving data from API.")
 }
