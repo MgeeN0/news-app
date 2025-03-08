@@ -3,6 +3,8 @@ package fi.oamk.news_app.model
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import fi.oamk.news_app.viewmodel.CategoryViewModel
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -36,7 +38,7 @@ data class Article (
 const val BASE_URL = "https://newsapi.org"
 interface ArticlesApi {
 
-    @GET("/v2/top-headlines?country=us&apiKey=1ee3e762b1064d258d2d5faa8f2a0dc5")
+    @GET("/v2/top-headlines?country=us&apiKey=1c4a22eca59e4e24bbdd41480955facc")
     suspend fun getArticles(@retrofit2.http.Query("category") category: String) : Article //This function can be called only from getInstance() function outside of this interface,
     //which contains Retrofit structure converting json response fields from GET request to an object
     //retrofit2.http.Query allows to insert query data into request dynamically
@@ -45,8 +47,16 @@ interface ArticlesApi {
 
         fun getInstance(): ArticlesApi {
             if(articlesService === null){
+                val loggingInterceptor = HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+
+                val client = OkHttpClient.Builder()
+                    .addInterceptor(loggingInterceptor)
+                    .build()
                 articlesService = Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build().create(ArticlesApi::class.java)
             }

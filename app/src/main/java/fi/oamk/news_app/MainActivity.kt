@@ -50,11 +50,8 @@ fun BottomNavigationApp() {
             composable(route = "main") {
                TopNews(modifier.padding(top = 65.dp))
             }
-            composable(route = "personalized") {
+            composable(route = "search") {
                 Personalized()
-            }
-            composable(route = "weather") {
-                Weather(modifier)
             }
         }
     }

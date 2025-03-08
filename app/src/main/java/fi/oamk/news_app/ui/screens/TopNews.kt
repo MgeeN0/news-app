@@ -2,6 +2,7 @@ package fi.oamk.news_app.ui.screens
 
 import android.graphics.Paint
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,9 +13,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -44,15 +47,20 @@ import kotlin.math.min
 fun TopNews(modifier: Modifier,articlesViewModel: ArticlesViewModel = viewModel(),categoryViewModel: CategoryViewModel = viewModel())
 {
     val selectedCategory = categoryViewModel.selectedCategory
-    articlesViewModel.getArticlesList(selectedCategory)
+    if(!categoryViewModel.hasSentRequest) {
+        articlesViewModel.getArticlesList(selectedCategory)
+        categoryViewModel.hasSentRequest = true
+    }
     Log.d("CATEGORY",selectedCategory)
     TopNewsBar()
         ArticlesScreen(modifier,articlesViewModel.articleUiState)
+    Log.d("Top News","hello")
 
 }
 
 @Composable
 fun ArticlesScreen(modifier: Modifier,uiState: NewsUiState) {
+    Log.d("Articles Screen","hello")
     when (uiState) {
         is NewsUiState.Loading -> LoadingScreen()
         is NewsUiState.Success -> NewsCards(modifier,uiState.articles)
@@ -102,6 +110,12 @@ fun ArticleCard(article:Content) {
         modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
             .fillMaxWidth().clickable { uriHandler.openUri(article.url) },
         shape = RoundedCornerShape(CornerSize(10.dp)),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+        colors = CardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            disabledContentColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.primary,
+            disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
         ),
@@ -115,11 +129,13 @@ fun ArticleCard(article:Content) {
                     error = painterResource(R.drawable.image_icon),
                     contentDescription = "Image"
                 )
-            article.title?.let { Text(text = it, fontSize = 25.sp, color = Color.Black, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top=6.dp)) }
-            article.description?.let { Text(text = it, fontSize = 15.sp, color = Color.DarkGray, modifier = Modifier.padding(top=5.dp, bottom=20.dp)) }
-            HorizontalDivider( modifier = Modifier.padding(end=280.dp),thickness = 2.dp)
-            article.source.name?.let { Text(text = it, fontSize = 12.sp, color = Color.DarkGray, modifier = Modifier.padding(top=3.dp, bottom=5.dp)) }
-            article.publishedAt?.let { Text(text = it.substring(0, 10), fontSize = 10.sp, color = Color.LightGray, modifier = Modifier.padding(top=3.dp, bottom=5.dp).fillMaxWidth(), textAlign = TextAlign.Right) }
+            article.title?.let { Text(text = it,style = MaterialTheme.typography.titleLarge, color = Color.Black, modifier = Modifier.padding(top=6.dp)) }
+            article.description?.let { Text(text = it,style = MaterialTheme.typography.bodyLarge, color = Color.DarkGray, modifier = Modifier.padding(top=5.dp, bottom=20.dp)) }
+            HorizontalDivider( modifier = Modifier.padding(end=280.dp),thickness = 2.dp, color = MaterialTheme.colorScheme.primary)
+            Row {
+                article.source.name?.let { Text(text = it, fontSize = 12.sp, color = Color.DarkGray, modifier = Modifier.padding(top=3.dp, bottom=5.dp)) }
+                article.publishedAt?.let { Text(text = it.substring(0, 10), fontSize = 10.sp, color = MaterialTheme.colorScheme.tertiary, modifier = Modifier.padding(top=3.dp, bottom=5.dp).fillMaxWidth(), textAlign = TextAlign.Right) }
+            }
         }
 
     }

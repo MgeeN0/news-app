@@ -22,8 +22,7 @@ fun BottomBar(navController: NavController) {
     // of the current destination and its parent destinations to handle cases when you are using nested navigation using the NavDestination hierarchy.
     val tabs = listOf(
         TabItem("News", R.drawable.newspaper1,route="main"),
-        TabItem("Personalized",R.drawable.personalized,route="personalized"),
-        TabItem("Weather",R.drawable.weather,route="weather"),
+        TabItem("Search",R.drawable.search,route="search"),
     )
     NavigationBar {
         tabs.forEach{tab ->

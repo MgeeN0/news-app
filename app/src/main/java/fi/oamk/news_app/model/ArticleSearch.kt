@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface SearchArticlesApi {
-    @GET("/v2/everything?apiKey=1ee3e762b1064d258d2d5faa8f2a0dc5")
+    @GET("/v2/everything?apiKey=1c4a22eca59e4e24bbdd41480955facc")
     suspend fun getArticles(
         @Query("q") search: String,
         @Query("language") language: String,
