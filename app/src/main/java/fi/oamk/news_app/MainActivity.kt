@@ -56,7 +56,7 @@ fun BottomNavigationApp(settingsViewModel: SettingsViewModel) {
                TopNews(navController,modifier.padding(top = 65.dp))
             }
             composable(route = "search") {
-                Personalized(navController)
+                Personalized(navController,modifier.padding(start = 8.dp, end = 8.dp, top = 65.dp))
             }
             composable(route = "settings") {
                 SettingsScreen(navController,modifier.padding(top = 65.dp),settingsViewModel)

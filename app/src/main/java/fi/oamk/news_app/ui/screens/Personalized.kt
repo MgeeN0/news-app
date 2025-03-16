@@ -1,9 +1,11 @@
 package fi.oamk.news_app.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -47,7 +50,8 @@ import fi.oamk.news_app.viewmodel.NewsUiState
 import fi.oamk.news_app.viewmodel.SearchOptionsViewModel
 
 @Composable
-fun Personalized(navController: NavController, articlesViewModel: ArticlesSearchViewModel = viewModel(), searchOptionsViewModel: SearchOptionsViewModel = viewModel()) {
+fun Personalized(navController: NavController, modifier:Modifier, articlesViewModel: ArticlesSearchViewModel = viewModel(), searchOptionsViewModel: SearchOptionsViewModel = viewModel()) {
+    Log.d("SCREEN HEIGHT",LocalConfiguration.current.screenHeightDp.dp.toString())
     val sortItems = listOf(stringResource(R.string.relevancy),
         stringResource(R.string.popularity), stringResource(R.string.upload_date)
     )
@@ -67,12 +71,12 @@ fun Personalized(navController: NavController, articlesViewModel: ArticlesSearch
     SearchTopNewsBar(navController)
         SearchArticlesScreen(articlesViewModel.articleUiState)
     Column(
-        modifier = Modifier.padding(top = 120.dp, start = 8.dp, end = 8.dp),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row {
             OutlinedTextField(
-                modifier = Modifier,
+                modifier = Modifier.fillMaxWidth(0.65f),
                 value = searchOptionsViewModel.searchPhrase,
                 onValueChange = { searchOptionsViewModel.searchPhrase = it },
                 label = { Text(text = stringResource(R.string.enter_search_phrase)) },
@@ -86,7 +90,8 @@ fun Personalized(navController: NavController, articlesViewModel: ArticlesSearch
                     disabledContentColor = MaterialTheme.colorScheme.tertiary,
                     disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer
                 ),
-                modifier = Modifier.padding(top = 12.dp, start = 12.dp),
+                modifier = Modifier.padding(top = 12.dp, start = 12.dp)
+                    .fillMaxWidth(),
                 onClick = {
                     if(searchOptionsViewModel.searchPhrase != "") {
                         articlesViewModel.getArticlesList(
@@ -222,7 +227,7 @@ fun SearchArticlesScreen(uiState: ArticleSearchUiState) {
 @Composable
 fun EmptyScreen() {
     Text(
-        modifier = Modifier.padding(vertical = 265.dp, horizontal = 10.dp),
+        modifier = Modifier.padding(vertical = 260.dp, horizontal = 10.dp),
         text = stringResource(R.string.articles)
     )
 }
